@@ -13,14 +13,12 @@ public class FlappyGame extends ApplicationAdapter {
 
 	public static final String TITLE = "FlappyBird";
 	private StateManager stateManager;
-	Texture img;
 	private SpriteBatch batch;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		stateManager = new StateManager();
-		img = new Texture("badlogic.jpg");
 		stateManager.push(new MenuState(stateManager));
 	}
 
@@ -36,6 +34,6 @@ public class FlappyGame extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+
 	}
 }

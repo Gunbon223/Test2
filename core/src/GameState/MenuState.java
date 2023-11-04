@@ -27,7 +27,6 @@ public class MenuState extends State {
     @Override
     public void update(float deltaTime) {
         handleInput();
-
     }
 
     @Override
@@ -42,7 +41,6 @@ public class MenuState extends State {
     public void dispose() {
         background.dispose();
         btnPlay.dispose();
-
     }
 
 }
