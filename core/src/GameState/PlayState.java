@@ -1,18 +1,20 @@
 package GameState;
 
+import Sprites.Bird;
 import Utility.Constrain;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.gunbon.game.FlappyGame;
 
 public class PlayState extends State{
-    private Texture bird;
+
+    private Bird bird;
 
 
     public PlayState(StateManager stateManager) {
         super(stateManager);
-        bird = new Texture("bird.png");
         camera.setToOrtho(false, Constrain.WIDTH/2,Constrain.HEIGHT/2);
-
+        bird = new Bird(50,50);
     }
 
     @Override
@@ -28,7 +30,7 @@ public class PlayState extends State{
     @Override
     public void render(SpriteBatch spriteBatch) {
     spriteBatch.begin();
-    spriteBatch.draw(bird,50,50);
+    spriteBatch.draw(bird.getBirdImg(),bird.getPosition().x ,bird.getPosition().y);
     spriteBatch.end();
     }
 

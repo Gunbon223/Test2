@@ -16,7 +16,6 @@ public class FlappyGame extends ApplicationAdapter {
 	Texture img;
 	private SpriteBatch batch;
 
-
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -31,7 +30,6 @@ public class FlappyGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //wipe screen and draw again
 		stateManager.update(Gdx.graphics.getDeltaTime());
 		stateManager.render(batch);
-
 
 	}
 	
