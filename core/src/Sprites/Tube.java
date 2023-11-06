@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-public class Tube {
+public class Tube implements ISprites {
     private static final Texture TOPTUBE_IMG = new Texture("toptube.png");;
     private static final Texture BOTTOMTUBE_IMG = new Texture("bottomTube.png");
     private Vector2 positionTop;
@@ -56,6 +56,11 @@ public class Tube {
 
     public boolean collision(Rectangle player) {
         return player.overlaps(topTubeRectangle) || player.overlaps(bottomTubeRectangle);
+    }
+
+    @Override
+    public void update(float deltaTime) {
+
     }
 
     public void dispose() {
