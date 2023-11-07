@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-public class Tube implements ISprites {
+public class Tube implements ISprites<Texture,Vector2> {
     private static final Texture TOPTUBE_IMG = new Texture("toptube.png");;
     private static final Texture BOTTOMTUBE_IMG = new Texture("bottomTube.png");
     private Vector2 positionTop;
@@ -14,9 +14,9 @@ public class Tube implements ISprites {
     private Random random;
     private Rectangle topTubeRectangle;
     private Rectangle bottomTubeRectangle;
-    private static final  int FLUCTUATION=130;
-    private static final int TUBE_GAP =200;
-    private static final int LOWEST_OPENING =120;
+    private static final  int FLUCTUATION=170;
+    private static final int TUBE_GAP =120;
+    private static final int LOWEST_OPENING =170;
     public static final int TUBE_WIDTH = 52;
 
     public Tube(float x) {
@@ -31,21 +31,6 @@ public class Tube implements ISprites {
 
     }
 
-    public Texture getTopTube() {
-        return TOPTUBE_IMG;
-    }
-
-    public Texture getBottomTube() {
-        return BOTTOMTUBE_IMG;
-    }
-
-    public Vector2 getPositionTop() {
-        return positionTop;
-    }
-
-    public Vector2 getPositionBot() {
-        return positionBot;
-    }
 
     public void reposition(float x) {
         positionTop.set(x,random.nextInt(FLUCTUATION)+TUBE_GAP+LOWEST_OPENING);
@@ -66,4 +51,18 @@ public class Tube implements ISprites {
     public void dispose() {
 
     }
+
+    @Override
+    public Texture getImg() {
+        return TOPTUBE_IMG;    }
+    public Texture getImg2() {
+        return BOTTOMTUBE_IMG;
+    }
+
+    @Override
+    public Vector2 getPosition() {
+        return positionTop;    }
+    public Vector2 getPosition2() {
+        return positionBot;    }
+
 }

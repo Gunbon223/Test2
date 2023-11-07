@@ -2,7 +2,6 @@ package GameState;
 
 import Utility.Constrain;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -14,7 +13,7 @@ public class MenuState extends State {
         super(stateManager);
         background = new Texture("background.png");
         btnPlay = new Texture("playbtn.png");
-        hudCamera.setToOrtho(false,Constrain.WIDTH,Constrain.HEIGHT);
+        menuCamera.setToOrtho(false,Constrain.WIDTH,Constrain.HEIGHT);
     }
 
     @Override
@@ -26,14 +25,13 @@ public class MenuState extends State {
 
     @Override
     public void update(float deltaTime) {
-        resetCameraToDefault();
         camera.update();
         handleInput();
     }
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.setProjectionMatrix(hudCamera.combined);
+        spriteBatch.setProjectionMatrix(menuCamera.combined);
         spriteBatch.begin();
         spriteBatch.draw(background,0,0 ,Constrain.WIDTH,Constrain.HEIGHT);
         spriteBatch.draw(btnPlay,(Constrain.WIDTH/2) - (btnPlay.getWidth()/2),(Constrain.HEIGHT/3));

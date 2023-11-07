@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-public class Bird implements ISprites{
+public class Bird{
     private static int birdSpeed ;
     // di chuyen 120px moi 1s
     private static final float INCREASE_TIME = 1f;
@@ -28,7 +28,7 @@ public class Bird implements ISprites{
         timeElapsed = 0f;
         birdSpeed = 120;
     }
-    @Override
+//    @Override
     public void update(float deltaTime) {
         birdAnimation.update(deltaTime);
         //Tinh thoi gian
@@ -64,10 +64,8 @@ public class Bird implements ISprites{
         this.position = position;
     }
 
-
-
-
     public void dispose() {
         birdImg.dispose();
     }
+
 }

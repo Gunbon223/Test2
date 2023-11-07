@@ -1,6 +1,7 @@
 package GameState;
 
 import Sprites.Bird;
+import Sprites.Ground;
 import Sprites.Tube;
 import Utility.Constrain;
 import com.badlogic.gdx.Gdx;
@@ -15,27 +16,24 @@ import java.util.*;
 public class PlayState extends State{
     private static final int TUBE_SPACING=150;
     private static final int TUBE_COUNT=4;
-    private static final int GROUND_Y_OFFSCREEN=-50;
-
     private Bird bird;
     private Texture background;
-    private Texture ground;
-    private Vector2 groundPosition1,groundPosition2;
+    private Ground ground;
     private  ArrayList<Tube> tubes;
 
-    public final float scale = 1.4f;
+    public final float scale = 1.5f;
     public PlayState(StateManager stateManager) {
         super(stateManager);
         camera.setToOrtho(false, (float) (Constrain.WIDTH/scale), (float) (Constrain.HEIGHT/scale));
         bird = new Bird(50,50);
         background = new Texture("background.png");
-        ground = new Texture("ground.png");
+        ground = new Ground(camera);
         tubes = new ArrayList<>();
+
         for (int i = 0; i < TUBE_COUNT; i++) {
             tubes.add(new Tube(i*(TUBE_SPACING+Tube.TUBE_WIDTH)+400));
         }
-        groundPosition1 = new Vector2(camera.position.x - camera.viewportWidth / 2 , GROUND_Y_OFFSCREEN);
-        groundPosition2 = new Vector2((camera.position.x - camera.viewportWidth / 2) + ground.getWidth(), GROUND_Y_OFFSCREEN);
+
         System.out.println("ps create");
     }
 
@@ -51,13 +49,13 @@ public class PlayState extends State{
         handleInput();
         // bird position
         bird.update(deltaTime);
-        camera.position.x=bird.getPosition().x +50;
+        camera.position.x=bird.getPosition().x;
         // ground add position
-        updateGround();
+        ground.updateGround(camera);
         // tube repostion when out of left screen to the right screen
         for(Tube i :tubes) {
-            if (camera.position.x - (camera.viewportWidth/2) > i.getPositionTop().x + i.getTopTube().getWidth() ) {
-                i.reposition(i.getPositionTop().x+((Tube.TUBE_WIDTH+TUBE_SPACING)*TUBE_COUNT));
+            if (camera.position.x - (camera.viewportWidth/2) > i.getPosition().x + i.getImg().getWidth() ) {
+                i.reposition(i.getPosition().x+((Tube.TUBE_WIDTH+TUBE_SPACING)*TUBE_COUNT));
             }
             if(i.collision(bird.getBirdRectangle())) {
                 stateManager.setStates(new MenuState(stateManager));
@@ -65,8 +63,8 @@ public class PlayState extends State{
             }
         }
         //bird max and min height  {
-        if(bird.getPosition().y<=(ground.getHeight()+GROUND_Y_OFFSCREEN)) {
-            bird.setPosition(new Vector3(bird.getPosition().x,ground.getHeight()+GROUND_Y_OFFSCREEN,0));
+        if(bird.getPosition().y<=(ground.getGroundImg().getHeight()+ Ground.GROUND_Y_OFFSCREEN)) {
+            bird.setPosition(new Vector3(bird.getPosition().x,ground.getGroundImg().getHeight()+Ground.GROUND_Y_OFFSCREEN,0));
         }
         if (bird.getPosition().y>=background.getHeight()) {
             bird.setPosition(new Vector3(bird.getPosition().x,background.getHeight(),0));
@@ -82,12 +80,12 @@ public class PlayState extends State{
         spriteBatch.draw(bird.getBirdImg(),bird.getPosition().x ,bird.getPosition().y);
         //render tube
         for (Tube i :tubes) {
-            spriteBatch.draw(i.getTopTube(),i.getPositionTop().x,i.getPositionTop().y);
-            spriteBatch.draw(i.getBottomTube(),i.getPositionBot().x,i.getPositionBot().y);
+            spriteBatch.draw(i.getImg(),i.getPosition().x,i.getPosition().y);
+            spriteBatch.draw(i.getImg2(),i.getPosition2().x,i.getPosition2().y);
         }
         //render ground
-        spriteBatch.draw(ground,groundPosition1.x,groundPosition1.y);
-        spriteBatch.draw(ground,groundPosition2.x,groundPosition2.y);
+        spriteBatch.draw(ground.getGroundImg(),ground.getGroundPosition1().x,ground.getGroundPosition1().y);
+        spriteBatch.draw(ground.getGroundImg(),ground.getGroundPosition2().x,ground.getGroundPosition2().y);
         spriteBatch.end();
     }
 
@@ -95,23 +93,13 @@ public class PlayState extends State{
     public void dispose() {
         background.dispose();
         bird.dispose();
-        ground.dispose();
         for (Tube i: tubes) {
             i.dispose();
         }
         System.out.println("ps dispose");
     }
 
-    private void updateGround() {
-        groundPosition1.x = camera.position.x - camera.viewportWidth / 2;
-        groundPosition2.x = (camera.position.x - camera.viewportWidth / 2) + ground.getWidth();
-        if(camera.position.x - (camera.viewportWidth)/2 > groundPosition1.x + ground.getWidth()) {
-            groundPosition1.add(ground.getWidth()*2,0);
-        }
-        if(camera.position.x - (camera.viewportWidth)/2 > groundPosition2.x + ground.getWidth()) {
-            groundPosition2.add(ground.getWidth()*2,0);
-        }
-    }
+
 
     public Texture getBackground() {
         return background;

@@ -8,18 +8,14 @@ import com.badlogic.gdx.math.Vector3;
 public abstract class State {
     protected Vector3 mouse;
     protected OrthographicCamera camera;
-    protected OrthographicCamera hudCamera;
+    protected OrthographicCamera menuCamera;
     protected StateManager stateManager;
 
     protected State(StateManager stateManager) {
         this.stateManager=stateManager;
         camera = new OrthographicCamera();
-        hudCamera = new OrthographicCamera();
+        menuCamera = new OrthographicCamera();
         mouse = new Vector3();
-    }
-
-    protected void resetCameraToDefault() {
-        camera.setToOrtho(false, Constrain.WIDTH, Constrain.HEIGHT);
     }
 
     public abstract void handleInput();
