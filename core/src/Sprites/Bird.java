@@ -1,5 +1,7 @@
 package Sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,6 +12,7 @@ public class Bird{
     // di chuyen 120px moi 1s
     private static final float INCREASE_TIME = 1f;
     private static final float INCREASE_AMOUNT = 1f;
+    private Sound flap;
 
     private float timeElapsed;
     private Vector3 position; // vi tri x y
@@ -27,6 +30,7 @@ public class Bird{
         birdRectangle = new Rectangle(x, y, birdImg.getWidth()/3,birdImg.getHeight());
         timeElapsed = 0f;
         birdSpeed = 120;
+        flap = Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"));
     }
 //    @Override
     public void update(float deltaTime) {
@@ -45,6 +49,7 @@ public class Bird{
         birdRectangle.setPosition(position.x, position.y);
     }
     public void jump() {
+        flap.play(0.3f);
         velocity.y=400;
     }
 
@@ -66,6 +71,7 @@ public class Bird{
 
     public void dispose() {
         birdImg.dispose();
+        flap.dispose();
     }
 
 }

@@ -20,20 +20,23 @@ public class PlayState extends State{
     private Texture background;
     private Ground ground;
     private  ArrayList<Tube> tubes;
+    private ArrayList<Ground> grounds;
 
     public final float scale = 1.5f;
     public PlayState(StateManager stateManager) {
         super(stateManager);
         camera.setToOrtho(false, (float) (Constrain.WIDTH/scale), (float) (Constrain.HEIGHT/scale));
-        bird = new Bird(50,50);
+        bird = new Bird(30,50);
         background = new Texture("background.png");
-        ground = new Ground(camera);
+//        ground = new Ground(camera);
         tubes = new ArrayList<>();
-
         for (int i = 0; i < TUBE_COUNT; i++) {
-            tubes.add(new Tube(i*(TUBE_SPACING+Tube.TUBE_WIDTH)+400));
+            tubes.add(new Tube(i*(TUBE_SPACING+Tube.TUBE_WIDTH)+600));
         }
-
+        grounds = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            grounds.add(new Ground(camera,i));
+        }
         System.out.println("ps create");
     }
 
@@ -47,11 +50,12 @@ public class PlayState extends State{
     @Override
     public void update(float deltaTime) {
         handleInput();
+        ground.updateGround(camera);
+
         // bird position
         bird.update(deltaTime);
-        camera.position.x=bird.getPosition().x;
+        camera.position.x=bird.getPosition().x+90;
         // ground add position
-        ground.updateGround(camera);
         // tube repostion when out of left screen to the right screen
         for(Tube i :tubes) {
             if (camera.position.x - (camera.viewportWidth/2) > i.getPosition().x + i.getImg().getWidth() ) {
