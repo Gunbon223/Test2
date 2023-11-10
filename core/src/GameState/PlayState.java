@@ -6,9 +6,12 @@ import Sprites.Tube;
 import Utility.Constrain;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Align;
 import com.gunbon.game.FlappyGame;
 
 import java.util.*;
@@ -18,9 +21,11 @@ public class PlayState extends State{
     private static final int TUBE_COUNT=4;
     private Bird bird;
     private Texture background;
-    private Ground ground;
     private  ArrayList<Tube> tubes;
     private ArrayList<Ground> grounds;
+    //HUD
+    public BitmapFont font;
+    float hudVerticalMargin,hudCentreX,hudRowTop,hudTowBottom,hudWidth;
 
     public final float scale = 1.5f;
     public PlayState(StateManager stateManager) {
@@ -28,7 +33,6 @@ public class PlayState extends State{
         camera.setToOrtho(false, (float) (Constrain.WIDTH/scale), (float) (Constrain.HEIGHT/scale));
         bird = new Bird(30,50);
         background = new Texture("background.png");
-//        ground = new Ground(camera);
         tubes = new ArrayList<>();
         for (int i = 0; i < TUBE_COUNT; i++) {
             tubes.add(new Tube(i*(TUBE_SPACING+Tube.TUBE_WIDTH)+600));
@@ -38,6 +42,7 @@ public class PlayState extends State{
             grounds.add(new Ground(camera,i));
         }
         System.out.println("ps create");
+        prepareHud();
     }
 
     @Override
@@ -50,8 +55,6 @@ public class PlayState extends State{
     @Override
     public void update(float deltaTime) {
         handleInput();
-        ground.updateGround(camera);
-
         // bird position
         bird.update(deltaTime);
         camera.position.x=bird.getPosition().x+90;
@@ -67,12 +70,19 @@ public class PlayState extends State{
             }
         }
         //bird max and min height  {
-        if(bird.getPosition().y<=(ground.getGroundImg().getHeight()+ Ground.GROUND_Y_OFFSCREEN)) {
-            bird.setPosition(new Vector3(bird.getPosition().x,ground.getGroundImg().getHeight()+Ground.GROUND_Y_OFFSCREEN,0));
+        if(bird.getPosition().y<=(grounds.get(0).getImg().getHeight()+ Ground.GROUND_Y_OFFSCREEN)) {
+            bird.setPosition(new Vector3(bird.getPosition().x,grounds.get(0).getImg().getHeight()+Ground.GROUND_Y_OFFSCREEN,0));
         }
         if (bird.getPosition().y>=background.getHeight()) {
             bird.setPosition(new Vector3(bird.getPosition().x,background.getHeight(),0));
         }
+
+        for(Ground i:grounds) {
+            if (camera.position.x - (camera.viewportWidth/2) > i.getPosition().x + i.getImg().getWidth() ) {
+                i.updateGround(i.getPosition().x +(i.getImg().getWidth()*3));
+            }
+        }
+        hudCentreX          = bird.getPosition().x;
         camera.update();
     }
 
@@ -88,9 +98,14 @@ public class PlayState extends State{
             spriteBatch.draw(i.getImg2(),i.getPosition2().x,i.getPosition2().y);
         }
         //render ground
-        spriteBatch.draw(ground.getGroundImg(),ground.getGroundPosition1().x,ground.getGroundPosition1().y);
-        spriteBatch.draw(ground.getGroundImg(),ground.getGroundPosition2().x,ground.getGroundPosition2().y);
+        for (Ground i:grounds) {
+            spriteBatch.draw(i.getImg(),i.getPosition1Rectangle().x,i.getPosition().y);
+        }
+        //hud
+        updateAndRenderHud(spriteBatch);
+
         spriteBatch.end();
+
     }
 
     @Override
@@ -103,7 +118,25 @@ public class PlayState extends State{
         System.out.println("ps dispose");
     }
 
+    private void prepareHud() {
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Roboto-Medium.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.size = 30;
+        fontParameter.color = com.badlogic.gdx.graphics.Color.WHITE;
+        font = fontGenerator.generateFont(fontParameter);
 
+        //
+        hudVerticalMargin   = font.getCapHeight()/2;
+        hudCentreX          = camera.viewportWidth/2;
+        hudRowTop           = camera.viewportHeight - hudVerticalMargin;
+        hudTowBottom        = camera.viewportHeight - hudVerticalMargin - font.getCapHeight();
+        hudWidth            = camera.viewportWidth;
+
+    }
+
+    private void updateAndRenderHud(SpriteBatch spriteBatch) {
+        font.draw(spriteBatch,"Score",hudCentreX,hudRowTop,hudWidth, Align.left,false);
+    }
 
     public Texture getBackground() {
         return background;
