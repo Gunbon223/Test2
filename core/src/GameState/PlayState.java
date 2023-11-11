@@ -31,6 +31,7 @@ public class PlayState extends State{
     public PlayState(StateManager stateManager) {
         super(stateManager);
         camera.setToOrtho(false, (float) (Constrain.WIDTH/scale), (float) (Constrain.HEIGHT/scale));
+        hudCamera.setToOrtho(false, Constrain.WIDTH/scale, Constrain.HEIGHT/scale);
         bird = new Bird(30,50);
         background = new Texture("background.png");
         tubes = new ArrayList<>();
@@ -42,6 +43,7 @@ public class PlayState extends State{
             grounds.add(new Ground(camera,i));
         }
         System.out.println("ps create");
+
         prepareHud();
     }
 
@@ -82,7 +84,9 @@ public class PlayState extends State{
                 i.updateGround(i.getPosition().x +(i.getImg().getWidth()*3));
             }
         }
-        hudCentreX          = bird.getPosition().x;
+        hudCamera.position.x = camera.position.x;
+        hudCamera.update();
+        hudCentreX = hudCamera.position.x;
         camera.update();
     }
 
@@ -102,9 +106,8 @@ public class PlayState extends State{
             spriteBatch.draw(i.getImg(),i.getPosition1Rectangle().x,i.getPosition().y);
         }
         //hud
-        updateAndRenderHud(spriteBatch);
-
         spriteBatch.end();
+        updateAndRenderHud(hudBatch);
 
     }
 
@@ -126,16 +129,30 @@ public class PlayState extends State{
         font = fontGenerator.generateFont(fontParameter);
 
         //
-        hudVerticalMargin   = font.getCapHeight()/2;
-        hudCentreX          = camera.viewportWidth/2;
-        hudRowTop           = camera.viewportHeight - hudVerticalMargin;
-        hudTowBottom        = camera.viewportHeight - hudVerticalMargin - font.getCapHeight();
-        hudWidth            = camera.viewportWidth;
+//        hudVerticalMargin   = font.getCapHeight()/2;
+//        hudCentreX          = camera.viewportWidth/2;
+//        hudRowTop           = camera.viewportHeight - hudVerticalMargin;
+//        hudTowBottom        = camera.viewportHeight - hudVerticalMargin - font.getCapHeight();
+//        hudWidth            = camera.viewportWidth;
+        hudVerticalMargin = font.getCapHeight() / 2;
+        hudWidth = Constrain.WIDTH / scale; // Sử dụng kích thước cố định thay vì viewportWidth
+        hudCentreX = hudWidth / 2;
+        hudRowTop = Constrain.HEIGHT / scale - hudVerticalMargin;
+        hudTowBottom = Constrain.HEIGHT / scale - hudVerticalMargin - font.getCapHeight();
 
     }
 
     private void updateAndRenderHud(SpriteBatch spriteBatch) {
+/*
         font.draw(spriteBatch,"Score",hudCentreX,hudRowTop,hudWidth, Align.left,false);
+*/
+
+        hudBatch.setProjectionMatrix(hudCamera.combined);
+        hudBatch.begin();
+        font.draw(hudBatch, "Score", hudCentreX, hudRowTop, hudWidth, Align.left, false);
+        hudBatch.end();
+
+
     }
 
     public Texture getBackground() {

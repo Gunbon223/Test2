@@ -35,13 +35,13 @@ public class Bird{
 //    @Override
     public void update(float deltaTime) {
         birdAnimation.update(deltaTime);
-        //Tinh thoi gian
-        timeElapsed += deltaTime;
-        //Tang van toc dua tren thoi gian
-        if (timeElapsed >= INCREASE_TIME) {
-            birdSpeed += INCREASE_AMOUNT;
-            timeElapsed = 0f;
-        }
+//        //Tinh thoi gian
+//        timeElapsed += deltaTime;
+//        //Tang van toc dua tren thoi gian
+//        if (timeElapsed >= INCREASE_TIME) {
+//            birdSpeed += INCREASE_AMOUNT;
+//            timeElapsed = 0f;
+//        }
         velocity.add(0, GRAVITY, 0);
         velocity.scl(deltaTime);
         position.add(birdSpeed * deltaTime, velocity.y, 0);
