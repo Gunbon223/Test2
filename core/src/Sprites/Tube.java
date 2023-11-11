@@ -19,6 +19,7 @@ public class Tube implements ISprites<Texture,Vector2> {
     private static final int LOWEST_OPENING =170;
     public static final int TUBE_WIDTH = 52;
 
+
     public Tube(float x) {
 
         random = new Random();
@@ -41,6 +42,10 @@ public class Tube implements ISprites<Texture,Vector2> {
 
     public boolean collision(Rectangle player) {
         return player.overlaps(topTubeRectangle) || player.overlaps(bottomTubeRectangle);
+    }
+
+    public boolean addScore(Rectangle player) {
+        return player.getY()==topTubeRectangle.getY();
     }
 
     @Override
