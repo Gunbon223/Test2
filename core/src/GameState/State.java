@@ -11,15 +11,15 @@ public abstract class State {
     protected OrthographicCamera menuCamera;
     protected StateManager stateManager;
     protected OrthographicCamera hudCamera;
-    protected SpriteBatch hudBatch;
+
 
     protected State(StateManager stateManager) {
         this.stateManager=stateManager;
         camera = new OrthographicCamera();
         menuCamera = new OrthographicCamera();
-        mouse = new Vector3();
         hudCamera = new OrthographicCamera();
-        hudBatch = new SpriteBatch();
+        mouse = new Vector3();
+
     }
 
     public abstract void handleInput();

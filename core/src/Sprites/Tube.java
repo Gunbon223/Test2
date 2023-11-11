@@ -19,6 +19,18 @@ public class Tube implements ISprites<Texture,Vector2> {
     private static final int LOWEST_OPENING =170;
     public static final int TUBE_WIDTH = 52;
 
+    private boolean scoreCheck;
+
+    // ... Existing code
+
+    public boolean isScored() {
+        return scoreCheck;
+    }
+
+    public void setScored(boolean scored) {
+        this.scoreCheck = scored;
+    }
+
 
     public Tube(float x) {
 
@@ -29,7 +41,7 @@ public class Tube implements ISprites<Texture,Vector2> {
         //
         topTubeRectangle = new Rectangle(positionTop.x,positionTop.y, TOPTUBE_IMG.getWidth(), TOPTUBE_IMG.getHeight());
         bottomTubeRectangle = new Rectangle(positionBot.x,positionBot.y, BOTTOMTUBE_IMG.getWidth(), BOTTOMTUBE_IMG.getHeight());
-
+        scoreCheck = false;
     }
 
 
@@ -44,9 +56,10 @@ public class Tube implements ISprites<Texture,Vector2> {
         return player.overlaps(topTubeRectangle) || player.overlaps(bottomTubeRectangle);
     }
 
-    public boolean addScore(Rectangle player) {
-        return player.getY()==topTubeRectangle.getY();
+    public Rectangle getTopTubeRectangle() {
+        return topTubeRectangle;
     }
+
 
     @Override
     public void update(float deltaTime) {

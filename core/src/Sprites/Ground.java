@@ -49,7 +49,7 @@ public class Ground implements ISprites<Texture,Vector2>{
 
     @Override
     public void dispose() {
-
+        groundImg.dispose();
     }
 
 
