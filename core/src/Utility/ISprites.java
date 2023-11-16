@@ -1,4 +1,4 @@
-package Sprites;
+package Utility;
 
 public interface ISprites<T,D>  {
 

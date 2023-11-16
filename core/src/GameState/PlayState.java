@@ -36,7 +36,7 @@ public class PlayState extends State{
         background = new Texture("background.png");
         tubes = new ArrayList<>();
         for (int i = 0; i < TUBE_COUNT; i++) {
-            tubes.add(new Tube(i*(TUBE_SPACING+Tube.TUBE_WIDTH)+600));
+            tubes.add(new Tube(i*(TUBE_SPACING+Constrain.TUBE_WIDTH)+600));
         }
         grounds = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -64,7 +64,7 @@ public class PlayState extends State{
         // tube repostion when out of left screen to the right screen
         for(Tube i :tubes) {
             if (camera.position.x - (camera.viewportWidth/2) > i.getPosition().x + i.getImg().getWidth() ) {
-                i.reposition(i.getPosition().x+((Tube.TUBE_WIDTH+TUBE_SPACING)*TUBE_COUNT));
+                i.reposition(i.getPosition().x+((Constrain.TUBE_WIDTH+TUBE_SPACING)*TUBE_COUNT));
             }
             if(i.collision(bird.getBirdRectangle())) {
                 stateManager.setStates(new MenuState(stateManager));
@@ -99,7 +99,7 @@ public class PlayState extends State{
         //render tube
         for (Tube i :tubes) {
             spriteBatch.draw(i.getImg(),i.getPosition().x,i.getPosition().y);
-            spriteBatch.draw(i.getImg2(),i.getPosition2().x,i.getPosition2().y);
+            spriteBatch.draw(i.getImgBot(),i.getPositionBot().x,i.getPositionBot().y);
         }
         //render ground
         for (Ground i:grounds) {
