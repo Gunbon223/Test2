@@ -26,7 +26,6 @@ public class PlayState extends State{
     //HUD
     public BitmapFont font;
     float hudVerticalMargin,hudCentreX,hudRowTop,hudTowBottom,hudWidth;
-    private static int score;
 
     public final float scale = 1.5f;
     public PlayState(StateManager stateManager) {
@@ -37,14 +36,14 @@ public class PlayState extends State{
         background = new Texture("background.png");
         tubes = new ArrayList<>();
         for (int i = 0; i < TUBE_COUNT; i++) {
-            tubes.add(new Tube(i*(TUBE_SPACING+Tube.TUBE_WIDTH)+600));
+            tubes.add(new Tube(i*(TUBE_SPACING+Constrain.TUBE_WIDTH)+600));
         }
         grounds = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             grounds.add(new Ground(camera,i));
         }
-        score =0;
         System.out.println("ps create");
+
         prepareHud();
     }
 
@@ -55,7 +54,6 @@ public class PlayState extends State{
         }
     }
 
-
     @Override
     public void update(float deltaTime) {
         handleInput();
@@ -63,27 +61,16 @@ public class PlayState extends State{
         bird.update(deltaTime);
         camera.position.x=bird.getPosition().x+90;
         // ground add position
-        // tube repostion when camera not focus
-
+        // tube repostion when out of left screen to the right screen
         for(Tube i :tubes) {
             if (camera.position.x - (camera.viewportWidth/2) > i.getPosition().x + i.getImg().getWidth() ) {
-                i.reposition(i.getPosition().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
-                i.setScored(false);
+                i.reposition(i.getPosition().x+((Constrain.TUBE_WIDTH+TUBE_SPACING)*TUBE_COUNT));
             }
-
             if(i.collision(bird.getBirdRectangle())) {
                 stateManager.setStates(new MenuState(stateManager));
                 break;
             }
-
-            if (bird.getPosition().x > i.getPosition().x + i.getImg().getWidth() && !i.isScored()) {
-                score++;
-                i.setScored(true); // Mark the tube as scored
-                System.out.println("Score: " + score);
-            }
         }
-
-
         //bird max and min height  {
         if(bird.getPosition().y<=(grounds.get(0).getImg().getHeight()+ Ground.GROUND_Y_OFFSCREEN)) {
             bird.setPosition(new Vector3(bird.getPosition().x,grounds.get(0).getImg().getHeight()+Ground.GROUND_Y_OFFSCREEN,0));
@@ -99,7 +86,7 @@ public class PlayState extends State{
         }
         hudCamera.position.x = camera.position.x;
         hudCamera.update();
-        hudCentreX = hudCamera.position.x - font.getLineHeight();
+        hudCentreX = hudCamera.position.x;
         camera.update();
     }
 
@@ -112,7 +99,7 @@ public class PlayState extends State{
         //render tube
         for (Tube i :tubes) {
             spriteBatch.draw(i.getImg(),i.getPosition().x,i.getPosition().y);
-            spriteBatch.draw(i.getImg2(),i.getPosition2().x,i.getPosition2().y);
+            spriteBatch.draw(i.getImgBot(),i.getPositionBot().x,i.getPositionBot().y);
         }
         //render ground
         for (Ground i:grounds) {
@@ -120,7 +107,7 @@ public class PlayState extends State{
         }
         //hud
         spriteBatch.end();
-        renderHud(spriteBatch);
+        updateAndRenderHud(hudBatch);
 
     }
 
@@ -131,9 +118,7 @@ public class PlayState extends State{
         for (Tube i: tubes) {
             i.dispose();
         }
-        for (Ground i: grounds) {
-            i.dispose();
-        }
+        System.out.println("ps dispose");
     }
 
     private void prepareHud() {
@@ -142,19 +127,34 @@ public class PlayState extends State{
         fontParameter.size = 30;
         fontParameter.color = com.badlogic.gdx.graphics.Color.WHITE;
         font = fontGenerator.generateFont(fontParameter);
+
+        //
+//        hudVerticalMargin   = font.getCapHeight()/2;
+//        hudCentreX          = camera.viewportWidth/2;
+//        hudRowTop           = camera.viewportHeight - hudVerticalMargin;
+//        hudTowBottom        = camera.viewportHeight - hudVerticalMargin - font.getCapHeight();
+//        hudWidth            = camera.viewportWidth;
         hudVerticalMargin = font.getCapHeight() / 2;
-        hudWidth = Constrain.WIDTH / scale;
+        hudWidth = Constrain.WIDTH / scale; // Sử dụng kích thước cố định thay vì viewportWidth
         hudCentreX = hudWidth / 2;
         hudRowTop = Constrain.HEIGHT / scale - hudVerticalMargin;
-        hudTowBottom = Constrain.HEIGHT / scale - hudVerticalMargin - font.getCapHeight()-10;
+        hudTowBottom = Constrain.HEIGHT / scale - hudVerticalMargin - font.getCapHeight();
+
     }
-    private void renderHud(SpriteBatch spriteBatch) {
-        spriteBatch.setProjectionMatrix(hudCamera.combined);
-        spriteBatch.begin();
-        font.draw(spriteBatch, "Score", hudCentreX, hudRowTop, hudWidth, Align.left, false);
-        font.draw(spriteBatch, Integer.toString(score), hudCentreX+font.getLineHeight(), hudTowBottom, hudWidth, Align.left, false);
-        spriteBatch.end();
+
+    private void updateAndRenderHud(SpriteBatch spriteBatch) {
+/*
+        font.draw(spriteBatch,"Score",hudCentreX,hudRowTop,hudWidth, Align.left,false);
+*/
+
+        hudBatch.setProjectionMatrix(hudCamera.combined);
+        hudBatch.begin();
+        font.draw(hudBatch, "Score", hudCentreX, hudRowTop, hudWidth, Align.left, false);
+        hudBatch.end();
+
+
     }
+
     public Texture getBackground() {
         return background;
     }
