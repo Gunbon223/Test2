@@ -16,13 +16,14 @@ public class Tube implements ISprites<Texture,Vector2> {
     private Random random;
     private Rectangle topTubeRectangle;
     private Rectangle bottomTubeRectangle;
+    private boolean scoreCheck;
 
 
     public Tube(float x) {
         topTubeImg = new Texture("toptube.png");
         botTubeImg = new Texture("bottomtube.png");
         random = new Random();
-        positionTop=new Vector2(x,random.nextInt(Constrain.FLUCTUATION)+Constrain.TUBE_GAP+Constrain.LOWEST_OPENING);
+        positionTop=new Vector2(x,random.nextInt(Constrain.FLUCTUATION)+Constrain.TUBE_GAP+Constrain.LOWEST_TOPTUBE);
         positionBot= new Vector2(x,positionTop.y-Constrain.TUBE_GAP- botTubeImg.getHeight());
         //
         topTubeRectangle = new Rectangle(positionTop.x,positionTop.y, topTubeImg.getWidth(), topTubeImg.getHeight());
@@ -30,22 +31,20 @@ public class Tube implements ISprites<Texture,Vector2> {
 
     }
     public void reposition(float x) {
-        positionTop.set(x,random.nextInt(Constrain.FLUCTUATION)+Constrain.TUBE_GAP+Constrain.LOWEST_OPENING);
+        positionTop.set(x,random.nextInt(Constrain.FLUCTUATION)+Constrain.TUBE_GAP+Constrain.LOWEST_TOPTUBE);
         positionBot.set(x,positionTop.y-Constrain.TUBE_GAP- botTubeImg.getHeight());
         topTubeRectangle.setPosition(positionTop.x,positionTop.y);
         bottomTubeRectangle.setPosition(positionBot.x,positionBot.y);
+        scoreCheck = false;
     }
-
+    public boolean isScored() {
+        return scoreCheck;
+    }
+    public void setScored(boolean scored) {
+        this.scoreCheck = scored;
+    }
     public boolean collision(Rectangle player) {
         return player.overlaps(topTubeRectangle) || player.overlaps(bottomTubeRectangle);
-    }
-    //create a boolean to check if the player is pass thorugh the tube
-    public boolean between(Rectangle player) {
-        return player.overlaps(topTubeRectangle) && player.overlaps(bottomTubeRectangle);
-    }
-    //create a boolean to check if the player rectangle.x is equal to the tube rectangle.x
-    public boolean equal(Rectangle player) {
-        return player.x == topTubeRectangle.x;
     }
 
     @Override

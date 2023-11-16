@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class FlappyGame extends ApplicationAdapter {
 
-	public static final String TITLE = "FlappyBird";
 	private StateManager stateManager;
 	private SpriteBatch batch;
 	private Music music;
@@ -33,18 +32,13 @@ public class FlappyGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1,0,0,1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //wipe screen and draw again
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stateManager.update(Gdx.graphics.getDeltaTime());
 		stateManager.render(batch);
-
 	}
-	
 	@Override
 	public void dispose () {
 		batch.dispose();
 		music.dispose();
 	}
-
-
-
 }

@@ -10,12 +10,10 @@ public class Animation {
     private float currentFrameTime;
     private int frameCount;
     private int frame;
-    private Texture birdAnimation ;
 
     public Animation(TextureRegion reigon,int frameCount,float cycleTime) {
         frames = new Array<TextureRegion>();
         int frameWidth = reigon.getRegionWidth() / frameCount;
-        //Chia 1 phan hinh anh de lam anh dong, add cac phan do vao 1 array de su dung
         for (int i = 0; i < frameCount; i++) {
             frames.add(new TextureRegion(reigon,i * frameWidth,0,frameWidth, reigon.getRegionHeight()));
         }
@@ -34,7 +32,6 @@ public class Animation {
             frame =0;
         }
     }
-
     public TextureRegion getFrame() {
         return frames.get(frame);
     }

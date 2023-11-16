@@ -1,5 +1,6 @@
 package Sprites;
 
+import Utility.Constrain;
 import Utility.ISprites;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,22 +10,18 @@ import com.badlogic.gdx.math.Vector2;
 public class Ground implements ISprites<Texture,Vector2> {
     private Texture groundImg;
     private Vector2 groundPosition;
-    private Vector2 groundPosition2;
-    private Rectangle position1Rectangle;
-    private Rectangle position2Rectangle;
-    public static final int GROUND_Y_OFFSCREEN=-50;
-
+    private Rectangle positionRectangle;
 
     public Ground(OrthographicCamera camera, int i) {
         groundImg = new Texture("ground.png");
-        groundPosition = new Vector2(camera.position.x - camera.viewportWidth / 2 -140 +i*groundImg.getWidth(), GROUND_Y_OFFSCREEN);
-        position1Rectangle = new Rectangle(groundPosition.x,groundPosition.y,groundImg.getWidth(),groundImg.getHeight());
+        groundPosition = new Vector2(camera.position.x - camera.viewportWidth / 2 -140 +i*groundImg.getWidth(), Constrain.GROUND_Y_OFFSCREEN);
+        positionRectangle = new Rectangle(groundPosition.x,groundPosition.y,groundImg.getWidth(),groundImg.getHeight());
     }
 
         // add like lube
     public void updateGround(float x) {
-        groundPosition.set(x,GROUND_Y_OFFSCREEN);
-        position1Rectangle.setPosition(groundPosition.x,groundPosition.y);
+        groundPosition.set(x, Constrain.GROUND_Y_OFFSCREEN);
+        positionRectangle.setPosition(groundPosition.x,groundPosition.y);
     }
     @Override
     public Texture getImg() {
@@ -36,15 +33,13 @@ public class Ground implements ISprites<Texture,Vector2> {
         return groundPosition;
     }
 
-    public Rectangle getPosition1Rectangle() {
-        return position1Rectangle;
+    public Rectangle getPositionRectangle() {
+        return positionRectangle;
     }
 
     @Override
     public void update(float deltaTime) {
-
     }
-
     @Override
     public void dispose() {
         groundImg.dispose();
