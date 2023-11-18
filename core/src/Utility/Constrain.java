@@ -17,7 +17,7 @@ public class Constrain {
     public static final int TUBE_COUNT=3;
     public static final int FLUCTUATION=250;
     public static final int TUBE_GAP =120;
-    public static final int LOWEST_TOPTUBE =120;
+    public static final int LOWEST_TOPTUBE =150;
     public static final int TUBE_WIDTH = 52;
     // PLAYSTATE
     public static final int START_POSITION_X = 0;

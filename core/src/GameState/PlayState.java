@@ -84,7 +84,7 @@ public class PlayState extends State{
                 i.updateGround(i.getPosition().x +(i.getImg().getWidth()*3));
             }
         }
-        hud.setHudCentreX(camera.position.x - hud.getFont().getLineHeight());
+        hud.setHudCentreX(camera.position.x - bird.getImg().getRegionWidth());
         camera.update();
     }
     @Override
@@ -101,7 +101,7 @@ public class PlayState extends State{
             spriteBatch.draw(i.getImg(),i.getPositionRectangle().x,i.getPosition().y);
         }
         hud.getFont().draw(spriteBatch, "Score", hud.getHudCentreX(), hud.getHudRowTop(),hud.getHudWidth() , Align.left, false);
-        hud.getFont().draw(spriteBatch, Integer.toString(score), hud.getHudCentreX()+hud.getFont().getLineHeight(), hud.getHudRowBottom(), hud.getHudWidth(), Align.left, false);
+        hud.getFont().draw(spriteBatch, Integer.toString(score), hud.getHudCentreX()+25, hud.getHudRowBottom(), hud.getHudWidth(), Align.left, false);
         spriteBatch.end();
 
     }
