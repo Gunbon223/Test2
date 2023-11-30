@@ -26,7 +26,8 @@ public class MenuState extends State {
 
     @Override
     public void handleInput() {
-        if (Gdx.input.justTouched()) {
+        //change stage
+        if (Gdx.input.justTouched()||Gdx.input.isKeyJustPressed(62)) {
             stateManager.setStates(new PlayState(stateManager));
         }
     }
@@ -35,7 +36,6 @@ public class MenuState extends State {
     public void update(float deltaTime) {
         camera.update();
         bird.getBirdAnimation().update(deltaTime);
-
         handleInput();
     }
 

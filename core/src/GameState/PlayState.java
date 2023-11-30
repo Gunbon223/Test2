@@ -6,11 +6,13 @@ import Sprites.Tube;
 import Utility.Constrain;
 import Utility.HUD;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import sun.jvm.hotspot.gc.shared.Space;
 
 import java.util.*;
 
@@ -20,7 +22,7 @@ public class PlayState extends State{
     private  ArrayList<Tube> tubes;
     private ArrayList<Ground> grounds;
     private HUD hud;
-    private  int score;
+    private int score;
 
 
     public PlayState(StateManager stateManager) {
@@ -37,13 +39,13 @@ public class PlayState extends State{
             grounds.add(new Ground(camera,i));
         }
         score =0;
-        System.out.println("ps create");
         hud = new HUD(25, Color.WHITE,camera.viewportWidth, camera.viewportHeight);
     }
 
     @Override
     public void handleInput() {
-        if(Gdx.input.justTouched()) {
+        //click or space
+        if(Gdx.input.justTouched()||Gdx.input.isKeyJustPressed(62)) {
             bird.jump();
         }
     }
@@ -55,6 +57,7 @@ public class PlayState extends State{
         bird.update(deltaTime);
         camera.position.x=bird.getPosition().x+(bird.getImg().getRegionWidth()/3);
         for(Tube i :tubes) {
+            // tube get off cam -> reposition and set score false
             if (camera.position.x - (camera.viewportWidth/2) > i.getPosition().x + i.getImg().getWidth() ) {
                 i.reposition(i.getPosition().x + ((Constrain.TUBE_WIDTH + Constrain.TUBE_SPACING) * Constrain.TUBE_COUNT));
                 i.setScored(false);
@@ -64,7 +67,7 @@ public class PlayState extends State{
                 stateManager.setStates(new MenuState(stateManager));
                 break;
             }
-            //score
+            //score increase if bird pass tube
             if (bird.getPosition().x > i.getPosition().x + i.getImg().getWidth() && !i.isScored()) {
                 score++;
                 i.setScored(true);
@@ -79,11 +82,13 @@ public class PlayState extends State{
         if (bird.getPosition().y>=background.getHeight()+bird.getImg().getRegionHeight()*1.5) {
             bird.setPosition(new Vector2(bird.getPosition().x, (float) (background.getHeight()+bird.getImg().getRegionHeight()*1.5)));
         }
+
         for(Ground i:grounds) {
             if (camera.position.x - (camera.viewportWidth/2) > i.getPosition().x + i.getImg().getWidth() ) {
                 i.updateGround(i.getPosition().x +(i.getImg().getWidth()*3));
             }
         }
+        //change font score position
         hud.setHudCentreX(camera.position.x - hud.getFont().getLineHeight());
         camera.update();
     }
